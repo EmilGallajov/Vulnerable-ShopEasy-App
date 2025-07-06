@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="header">
+    <a href="/orders" class="back-link">&larr; Back to Orders</a>
+    <a href="/logout" class="logout-btn">Logout</a>
+  </div>
+  <div class="order-detail">
+    <img src="<%= order.image %>" alt="<%= order.item %>" class="order-img-large" />
+    <h2>Order #<%= order.orderId %></h2>
+    <h3>Item: <%= order.item %></h3>
+    <p>Ordered by User ID: <%= order.userId %></p>
+  </div>
+</body>
+</html> 

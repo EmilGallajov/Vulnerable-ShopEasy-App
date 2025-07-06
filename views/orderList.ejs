@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Welcome, <%= user.username %>!</h1>
+    <a href="/profile/<%= user.id %>" class="logout-btn">Profile</a>
+    <a href="/logout" class="logout-btn">Logout</a>
+  </div>
+  <div class="orders-list">
+    <% orders.forEach(order => { %>
+      <div class="order-card">
+        <img src="<%= order.image %>" alt="<%= order.item %>" class="order-img" />
+        <h3><%= order.item %></h3>
+        <a href="/order/<%= order.orderId %>" class="details-link">View Details</a>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html> 
