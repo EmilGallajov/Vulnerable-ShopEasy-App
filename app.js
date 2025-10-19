@@ -1,19 +1,18 @@
-// app.js
 const express = require("express");
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
-const userModel = require("./models/userModel"); // Make sure this has a closeConnection method
+const userModel = require("./models/userModel");
 const orderRoutes = require("./routes/orderRoutes");
 const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 const PORT = 3000;
 
-// Path to the log file
-const LOG_FILE_PATH = path.join(__dirname, "requests.log");
+// Path to the log file (unused now, but kept for reference)
+// const LOG_FILE_PATH = path.join(__dirname, "requests.log");
 
 // -------------------
 // View Engine Setup
@@ -30,7 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // -------------------
-// Request Logging Middleware (Headers + Body + File)
+// Request Logging Middleware (Headers + Body)
 // -------------------
 app.use((req, res, next) => {
   const start = Date.now();
@@ -45,13 +44,15 @@ app.use((req, res, next) => {
       `Body: ${Object.keys(req.body).length > 0 ? JSON.stringify(req.body, null, 2) : "<empty>"}`
     ].join("\n");
 
-    // Print to console
+    // Print to console only
     console.log(logEntry);
 
-    // Append to file
-    fs.appendFile(LOG_FILE_PATH, logEntry + "\n", (err) => {
-      if (err) console.error("Failed to write request log:", err);
-    });
+    // -------------------
+    // File logging is commented out
+    // -------------------
+    // fs.appendFile(LOG_FILE_PATH, logEntry + "\n", (err) => {
+    //   if (err) console.error("Failed to write request log:", err);
+    // });
   });
 
   next();
