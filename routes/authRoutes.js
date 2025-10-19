@@ -5,6 +5,8 @@ const { sessionMiddleware, requireAuth } = require("../controllers/authControlle
 
 router.get("/login", authController.showLogin);
 router.post("/login", authController.login);
+router.get("/register", authController.showRegister);
+router.post("/register", authController.register);
 router.get("/logout", authController.logout);
 router.get("/profile/:id", sessionMiddleware, requireAuth, authController.profile);
 

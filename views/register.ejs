@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-bg">
+  <a href="/" class="nav-btn" style="position: absolute; top: 2rem; left: 2rem;">Home</a>
+  <div class="login-container">
+    <h2>Register for ShopEasy</h2>
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+    <% if (success) { %>
+      <div class="success"><%= success %></div>
+    <% } %>
+    <form method="POST" action="/register<%= typeof next !== 'undefined' && next ? '?next=' + encodeURIComponent(next) : '' %>">
+      <input name="username" placeholder="Username" required />
+      <input name="password" placeholder="Password" type="password" required />
+      <input name="confirmPassword" placeholder="Confirm Password" type="password" required />
+      <button type="submit">Register</button>
+    </form>
+    <p style="text-align: center; margin-top: 1rem;">
+      Already have an account? <a href="/login" style="color: #007bff;">Login here</a>
+    </p>
+  </div>
+</body>
+</html>
