@@ -21,11 +21,12 @@ app.set("views", path.join(__dirname, "views"));
 // Middleware
 // -------------------
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // parse JSON body
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // -------------------
-// Request Logging Middleware
+// Request Logging Middleware (Headers + Body)
 // -------------------
 app.use((req, res, next) => {
   const start = Date.now();
@@ -33,7 +34,16 @@ app.use((req, res, next) => {
   res.on('finish', () => {
     const timestamp = new Date().toISOString();
     const duration = Date.now() - start;
-    console.log(`[${timestamp}] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
+
+    console.log(`\n[${timestamp}] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
+    console.log("Headers:", JSON.stringify(req.headers, null, 2));
+    
+    // Only log body if it exists
+    if (Object.keys(req.body).length > 0) {
+      console.log("Body:", JSON.stringify(req.body, null, 2));
+    } else {
+      console.log("Body: <empty>");
+    }
   });
 
   next();
@@ -45,17 +55,9 @@ app.use((req, res, next) => {
 app.use("/", authRoutes);
 app.use("/order", orderRoutes);
 
-app.get("/", (req, res) => {
-  res.render("home");
-});
-
-app.get("/about", (req, res) => {
-  res.render("about");
-});
-
-app.get("/orders", (req, res) => {
-  res.redirect("/order");
-});
+app.get("/", (req, res) => res.render("home"));
+app.get("/about", (req, res) => res.render("about"));
+app.get("/orders", (req, res) => res.redirect("/order"));
 
 // -------------------
 // 404 Handler
