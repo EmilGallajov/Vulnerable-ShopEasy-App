@@ -80,6 +80,8 @@ exports.login = async (req, res) => {
     
     // Vulnerable password comparison - allows NoSQL injection in password field
     // Attackers can use MongoDB operators to bypass password check
+    
+    /*
     let passwordMatch = false;
     
     if (user) {
@@ -97,8 +99,10 @@ exports.login = async (req, res) => {
         passwordMatch = (user.password === password);
       }
     }
-    
-    if (user && passwordMatch) {
+    */
+
+    // if the login page is vulnerable to nosql injection, we need to add if statement like that: if (user && passwordMatch)
+    if (user) {
       const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: "2h" });
       res.cookie(JWT_COOKIE, token, { httpOnly: true });
       // Open redirect vulnerability: redirects to any URL provided in next parameter
