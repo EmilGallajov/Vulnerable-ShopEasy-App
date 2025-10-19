@@ -4,12 +4,16 @@ const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const fs = require("fs");
 const userModel = require("./models/userModel"); // Make sure this has a closeConnection method
 const orderRoutes = require("./routes/orderRoutes");
 const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 const PORT = 3000;
+
+// Path to the log file
+const LOG_FILE_PATH = path.join(__dirname, "requests.log");
 
 // -------------------
 // View Engine Setup
@@ -26,7 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // -------------------
-// Request Logging Middleware (Headers + Body)
+// Request Logging Middleware (Headers + Body + File)
 // -------------------
 app.use((req, res, next) => {
   const start = Date.now();
@@ -35,15 +39,19 @@ app.use((req, res, next) => {
     const timestamp = new Date().toISOString();
     const duration = Date.now() - start;
 
-    console.log(`\n[${timestamp}] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
-    console.log("Headers:", JSON.stringify(req.headers, null, 2));
-    
-    // Only log body if it exists
-    if (Object.keys(req.body).length > 0) {
-      console.log("Body:", JSON.stringify(req.body, null, 2));
-    } else {
-      console.log("Body: <empty>");
-    }
+    const logEntry = [
+      `\n[${timestamp}] ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`,
+      `Headers: ${JSON.stringify(req.headers, null, 2)}`,
+      `Body: ${Object.keys(req.body).length > 0 ? JSON.stringify(req.body, null, 2) : "<empty>"}`
+    ].join("\n");
+
+    // Print to console
+    console.log(logEntry);
+
+    // Append to file
+    fs.appendFile(LOG_FILE_PATH, logEntry + "\n", (err) => {
+      if (err) console.error("Failed to write request log:", err);
+    });
   });
 
   next();
